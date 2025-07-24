@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: calometer_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: calometer
+      MYSQL_USER: calometer
+      MYSQL_PASSWORD: calometer_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - calometer_network
+    command: --default-authentication-plugin=mysql_native_password
+
+  phpmyadmin:
+    image: arm64v8/phpmyadmin:latest
+    container_name: calometer_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - calometer_network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  calometer_network:
+    driver: bridge
