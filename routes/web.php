@@ -5,6 +5,8 @@ use Inertia\Inertia;
 use App\Http\Controllers\Verfikasi\VerfikasiController;
 use App\Http\Controllers\Bmi\BmiController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\CalorieIntake\CalorieIntakeController;
+use App\Http\Controllers\DailyTracker\DailyTrackerController;
 
 // Home Route
 Route::get('/', [VerfikasiController::class, 'homePage'])->name('home');
@@ -36,14 +38,28 @@ Route::middleware(['auth'])->group(function () {
 
 // No dashboard needed - authenticated users go to home
 
-// Placeholder routes for future features
-Route::get('/calorie-intake', function () {
-    return Inertia::render('halamanHome'); // Temporary redirect to home
-})->name('calorie-intake');
+// Calorie Intake Routes (accessible without login)
+Route::get('/calorie-intake', [CalorieIntakeController::class, 'calorieIntakePage'])->name('calorie-intake.page');
+Route::post('/calorie-intake/calculate-guest', [CalorieIntakeController::class, 'calculateGuestCalorieIntake'])->name('calorie-intake.calculate.guest');
 
-Route::get('/daily-tracker', function () {
-    return Inertia::render('halamanHome'); // Temporary redirect to home
-})->name('daily-tracker');
+// Calorie Intake Routes for authenticated users
+Route::middleware(['auth'])->group(function () {
+    Route::post('/calorie-intake/calculate', [CalorieIntakeController::class, 'calculateCalorieIntake'])->name('calorie-intake.calculate');
+    Route::get('/calorie-intake/history', [CalorieIntakeController::class, 'index'])->name('calorie-intake.index');
+    Route::delete('/calorie-intake/delete/{id}', [CalorieIntakeController::class, 'destroy'])->name('calorie-intake.delete');
+});
+
+// Daily Tracker Routes (accessible to all, but requires auth for functionality)
+Route::get('/daily-tracker', [DailyTrackerController::class, 'dailyTrackerPage'])->name('daily-tracker.page');
+
+// Daily Tracker Routes for authenticated users only
+Route::middleware(['auth'])->group(function () {
+    Route::post('/daily-tracker/add', [DailyTrackerController::class, 'addFoodDrink'])->name('daily-tracker.add');
+    Route::post('/daily-tracker/update-targets', [DailyTrackerController::class, 'updateTargets'])->name('daily-tracker.update-targets');
+    Route::get('/daily-tracker/delete/{id}', [DailyTrackerController::class, 'deleteItem'])->name('daily-tracker.delete');
+    Route::get('/daily-tracker/history', [DailyTrackerController::class, 'historyPage'])->name('daily-tracker.history');
+    Route::get('/daily-tracker/history/{date}', [DailyTrackerController::class, 'historyDetail'])->name('daily-tracker.history.detail');
+});
 
 // require __DIR__.'/settings.php';
 // require __DIR__.'/auth.php';

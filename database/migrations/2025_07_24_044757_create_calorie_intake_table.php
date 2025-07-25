@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('calorie_intake', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->nullable();
-            $table->foreignId('activity_id')->constrained('activity');
+            $table->foreignId('user_id')->nullable()->constrained('users');
+            $table->foreignId('activity_id')->nullable()->constrained('activity');
             $table->integer('height');
             $table->float('weight');
             $table->enum('gender', ['male', 'female']);

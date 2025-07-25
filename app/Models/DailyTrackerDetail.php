@@ -12,11 +12,15 @@ class DailyTrackerDetail extends Model
     protected $fillable = [
         'tracker_id',
         'food_type',
-        'food_or_drink_name',
-        'amount_food_or_drink',
+        'name',
+        'consumed_at',
+        'amount',
+        'unit',
         'calories',
         'water_intake',
     ];
+
+    // No casts needed for time field - Laravel handles it as string automatically
 
     // table daily_tracker_detail relation to table daily_tracker
     public function dailyTracker()

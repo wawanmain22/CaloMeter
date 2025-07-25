@@ -16,6 +16,12 @@ class CalorieIntake extends Model
         'weight',
         'gender',
         'age',
+        'bmr',
+        'daily_calories',
+        'activity_multiplier',
+        'recommendation_maintain',
+        'recommendation_lose',
+        'recommendation_gain',
     ];
 
     // table calorie_intake relation to table users
