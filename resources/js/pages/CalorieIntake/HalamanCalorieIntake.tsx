@@ -159,13 +159,13 @@ export default function HalamanCalorieIntake({ activities, calorieHistory = [], 
       <div className="space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-3xl md:text-4xl font-bold">Calorie Intake Calculator</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">Calorie Intake Calculator</h1>
+          <p className="text-sm md:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
             Hitung kebutuhan kalori harian Anda berdasarkan tinggi, berat, usia, dan tingkat aktivitas
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Calorie Calculator Form */}
           <Card>
             <CardHeader>

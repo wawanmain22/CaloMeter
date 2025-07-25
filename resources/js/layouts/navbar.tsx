@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Link, usePage } from '@inertiajs/react';
-import { User, LogOut } from 'lucide-react';
+import { User, LogOut, Menu } from 'lucide-react';
 import { SharedData } from '@/types';
 import { ThemeToggle } from '@/components/theme-toggle';
 
@@ -50,9 +51,126 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
             </Link>
           </div>
 
-          {/* Auth Section */}
+          {/* Mobile Menu */}
+          <div className="md:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-80 sm:w-96">
+                <SheetHeader>
+                  <SheetTitle>Menu Navigasi</SheetTitle>
+                  <SheetDescription>
+                    Akses fitur-fitur CaloMeter dan kelola akun Anda
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="flex flex-col h-full">
+                  <div className="flex-1 space-y-6 mt-6">
+                    {/* Navigation Links */}
+                    <div className="space-y-4">
+                      <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">Menu</h3>
+                      <div className="space-y-3">
+                        <SheetClose asChild>
+                          <Link 
+                            href="/bmi" 
+                            className="flex items-center text-base font-medium hover:text-primary transition-colors py-1"
+                          >
+                            BMI Calculator
+                          </Link>
+                        </SheetClose>
+                        <SheetClose asChild>
+                          <Link 
+                            href="/calorie-intake" 
+                            className="flex items-center text-base font-medium hover:text-primary transition-colors py-1"
+                          >
+                            Calorie Intake
+                          </Link>
+                        </SheetClose>
+                        <SheetClose asChild>
+                          <Link 
+                            href="/daily-tracker" 
+                            className="flex items-center text-base font-medium hover:text-primary transition-colors py-1"
+                          >
+                            Daily Tracker
+                          </Link>
+                        </SheetClose>
+                      </div>
+                    </div>
+                    
+                    {/* Auth Section */}
+                    {showAuthButtons && (
+                      <div className="border-t pt-6">
+                        {user ? (
+                          <div className="space-y-4">
+                            <div className="flex items-center space-x-3">
+                              <Avatar className="h-10 w-10">
+                                <AvatarFallback className="bg-primary text-primary-foreground">
+                                  {typeof user.username === 'string' ? user.username.charAt(0).toUpperCase() : 'U'}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <p className="font-medium">{String(user.username)}</p>
+                                <p className="text-sm text-muted-foreground">
+                                  {user.gender === 'male' ? 'Laki-laki' : 'Perempuan'}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <SheetClose asChild>
+                                <Button variant="ghost" asChild className="w-full justify-start">
+                                  <Link href="/profile">
+                                    <User className="mr-2 h-4 w-4" />
+                                    Profile
+                                  </Link>
+                                </Button>
+                              </SheetClose>
+                              <SheetClose asChild>
+                                <Button variant="ghost" asChild className="w-full justify-start">
+                                  <Link href="/logout" method="post">
+                                    <LogOut className="mr-2 h-4 w-4" />
+                                    Logout
+                                  </Link>
+                                </Button>
+                              </SheetClose>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-2">
+                            <SheetClose asChild>
+                              <Button variant="outline" asChild className="w-full">
+                                <Link href="/login">Sign In</Link>
+                              </Button>
+                            </SheetClose>
+                            <SheetClose asChild>
+                              <Button asChild className="w-full">
+                                <Link href="/register">Sign Up</Link>
+                              </Button>
+                            </SheetClose>
+                          </div>
+                        )}
+                        <div className="mt-4">
+                          <ThemeToggle />
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Theme toggle for non-auth users */}
+                    {!showAuthButtons && (
+                      <div className="border-t pt-6">
+                        <ThemeToggle />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          {/* Desktop Auth Section */}
           {showAuthButtons && (
-            <div className="flex items-center space-x-2">
+            <div className="hidden md:flex items-center space-x-2">
               {/* Theme Toggle */}
               <ThemeToggle />
               {user ? (

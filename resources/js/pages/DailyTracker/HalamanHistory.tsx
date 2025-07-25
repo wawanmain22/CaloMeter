@@ -52,7 +52,7 @@ export default function HalamanHistory({
   selectedDetails = [],
   selectedDate 
 }: HistoryPageProps) {
-  const [viewMode, setViewMode] = useState<'list' | 'detail'>('list');
+  const [viewMode, setViewMode] = useState<'list' | 'detail'>(selectedTracker ? 'detail' : 'list');
 
   const getProgressColor = (percentage: number) => {
     if (percentage >= 100) return 'bg-green-500';
@@ -145,10 +145,10 @@ export default function HalamanHistory({
                       </div>
                     </div>
                     <Badge variant="secondary">
-                      {Math.round(selectedTracker.calorie_progress_percentage)}%
+                      {Math.round(parseFloat(selectedTracker.calorie_progress_percentage?.toString()) || 0)}%
                     </Badge>
                   </div>
-                  <Progress value={selectedTracker.calorie_progress_percentage} className="h-2" />
+                  <Progress value={parseFloat(selectedTracker.calorie_progress_percentage?.toString()) || 0} className="h-2" />
                 </div>
               </CardContent>
             </Card>
@@ -170,10 +170,10 @@ export default function HalamanHistory({
                       </div>
                     </div>
                     <Badge variant="secondary">
-                      {Math.round(selectedTracker.water_progress_percentage)}%
+                      {Math.round(parseFloat(selectedTracker.water_progress_percentage?.toString()) || 0)}%
                     </Badge>
                   </div>
-                  <Progress value={selectedTracker.water_progress_percentage} className="h-2" />
+                  <Progress value={parseFloat(selectedTracker.water_progress_percentage?.toString()) || 0} className="h-2" />
                 </div>
               </CardContent>
             </Card>
@@ -250,14 +250,14 @@ export default function HalamanHistory({
     <VerifikasiLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="space-y-4">
           <div>
-            <h1 className="text-3xl font-bold">History Daily Tracker</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-2xl md:text-3xl font-bold">History Daily Tracker</h1>
+            <p className="text-sm md:text-base text-muted-foreground">
               Riwayat tracking makanan dan minuman Anda
             </p>
           </div>
-          <Button asChild>
+          <Button asChild className="w-full sm:w-auto">
             <Link href="/daily-tracker">
               <Target className="h-4 w-4 mr-2" />
               Tracking Hari Ini
@@ -274,7 +274,7 @@ export default function HalamanHistory({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold text-blue-600">{stats.avgCalories}</div>
                 <div className="text-sm text-muted-foreground">Rata-rata Kalori</div>
@@ -326,17 +326,17 @@ export default function HalamanHistory({
                           </Badge>
                         </div>
                         
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div className="space-y-1">
                             <div className="flex items-center gap-2 text-sm">
                               <Utensils className="h-4 w-4 text-orange-500" />
                               <span>{tracker.total_calorie_intake} / {tracker.calorie_target} kal</span>
                               <Badge variant="secondary" className="text-xs">
-                                {Math.round(tracker.calorie_progress_percentage)}%
+                                {Math.round(parseFloat(tracker.calorie_progress_percentage?.toString()) || 0)}%
                               </Badge>
                             </div>
                             <Progress 
-                              value={tracker.calorie_progress_percentage} 
+                              value={parseFloat(tracker.calorie_progress_percentage?.toString()) || 0} 
                               className="h-1"
                             />
                           </div>
@@ -346,11 +346,11 @@ export default function HalamanHistory({
                               <Droplets className="h-4 w-4 text-blue-500" />
                               <span>{tracker.total_water_intake} / {tracker.water_target} ml</span>
                               <Badge variant="secondary" className="text-xs">
-                                {Math.round(tracker.water_progress_percentage)}%
+                                {Math.round(parseFloat(tracker.water_progress_percentage?.toString()) || 0)}%
                               </Badge>
                             </div>
                             <Progress 
-                              value={tracker.water_progress_percentage} 
+                              value={parseFloat(tracker.water_progress_percentage?.toString()) || 0} 
                               className="h-1"
                             />
                           </div>

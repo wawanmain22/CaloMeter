@@ -101,8 +101,8 @@ export default function HalamanBmi({ bmiHistory = [], bmiResult }: BMIPageProps)
       <div className="space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-3xl md:text-4xl font-bold">BMI Calculator</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">BMI Calculator</h1>
+          <p className="text-sm md:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
             Hitung Body Mass Index (BMI) Anda untuk mengetahui kategori berat badan dan mendapatkan rekomendasi kesehatan
           </p>
         </div>
@@ -123,7 +123,7 @@ export default function HalamanBmi({ bmiHistory = [], bmiResult }: BMIPageProps)
           </Alert>
         )}
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {/* BMI Calculator Form */}
           <Card>
             <CardHeader>
@@ -137,7 +137,7 @@ export default function HalamanBmi({ bmiHistory = [], bmiResult }: BMIPageProps)
             </CardHeader>
             <CardContent>
               <form onSubmit={submit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="height">Tinggi Badan (cm)</Label>
                     <Input

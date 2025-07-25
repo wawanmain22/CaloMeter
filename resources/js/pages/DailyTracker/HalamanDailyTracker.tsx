@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import VerifikasiLayout from '@/layouts/verifikasi-layout';
 import NonVerifikasiLayout from '@/layouts/non-verifikasi-layout';
 import { useForm, usePage, Link } from '@inertiajs/react';
@@ -274,37 +275,40 @@ export default function HalamanDailyTracker({
     <Layout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-4">
           <div>
-            <h1 className="text-3xl font-bold">Daily Tracker</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-2xl md:text-3xl font-bold">Daily Tracker</h1>
+            <p className="text-sm md:text-base text-muted-foreground">
               Tracking harian makanan, minuman, dan progress kalori Anda
             </p>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <Input
               type="date"
               value={selectedDate}
               onChange={(e) => {
                 window.location.href = `/daily-tracker?date=${e.target.value}`;
               }}
-              className="w-auto"
+              className="flex-1 sm:w-auto"
             />
-            <Button asChild variant="outline" size="sm">
-              <Link href="/daily-tracker/history">
-                <History className="h-4 w-4 mr-2" />
-                History
-              </Link>
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setShowTargetForm(true)}
-            >
-              <Settings className="h-4 w-4 mr-2" />
-              Target
-            </Button>
+            <div className="flex gap-2">
+              <Button asChild variant="outline" size="sm" className="flex-1 sm:flex-none">
+                <Link href="/daily-tracker/history">
+                  <History className="h-4 w-4 mr-2" />
+                  <span className="hidden sm:inline">History</span>
+                </Link>
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setShowTargetForm(true)}
+                className="flex-1 sm:flex-none"
+              >
+                <Settings className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">Target</span>
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -375,7 +379,7 @@ export default function HalamanDailyTracker({
         )}
 
         {/* Progress Cards */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           {/* Kalori Progress */}
           <Card>
             <CardHeader className="pb-3">
@@ -461,7 +465,7 @@ export default function HalamanDailyTracker({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-center">
                 <div>
                   <div className="text-xl font-bold text-emerald-600">
                     {dailyDetails.filter(item => item.food_type === 'food').length}
@@ -525,7 +529,7 @@ export default function HalamanDailyTracker({
           <CardContent>
             {showFoodForm && (
               <form onSubmit={submitFood} className="space-y-4 mb-6 p-4 border rounded-lg bg-orange-50/50">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="food_name">Nama Makanan</Label>
                     <Input
@@ -549,7 +553,7 @@ export default function HalamanDailyTracker({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="food_amount">Jumlah</Label>
                     <Input
@@ -675,7 +679,7 @@ export default function HalamanDailyTracker({
           <CardContent>
             {showWaterForm && (
               <form onSubmit={submitWater} className="space-y-4 mb-6 p-4 border rounded-lg bg-blue-50/50">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="water_name">Nama Minuman</Label>
                     <Input
@@ -699,7 +703,7 @@ export default function HalamanDailyTracker({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="water_amount">Jumlah (ml)</Label>
                     <Input
@@ -790,70 +794,69 @@ export default function HalamanDailyTracker({
         </Card>
 
         {/* Target Settings Modal */}
-        {showTargetForm && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <Card className="w-full max-w-md">
-              <CardHeader>
-                <CardTitle>Atur Target Harian</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={submitTargets} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="calorie_target">Target Kalori</Label>
-                    <Input
-                      id="calorie_target"
-                      type="number"
-                      value={targetForm.data.calorie_target}
-                      onChange={(e) => targetForm.setData('calorie_target', e.target.value)}
-                      required
-                    />
-                  </div>
+        <Dialog open={showTargetForm} onOpenChange={setShowTargetForm}>
+          <DialogContent className="w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Atur Target Harian</DialogTitle>
+              <DialogDescription>
+                Sesuaikan target kalori dan air harian Anda sesuai dengan kebutuhan dan tujuan kesehatan.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={submitTargets} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="calorie_target">Target Kalori</Label>
+                <Input
+                  id="calorie_target"
+                  type="number"
+                  value={targetForm.data.calorie_target}
+                  onChange={(e) => targetForm.setData('calorie_target', e.target.value)}
+                  required
+                />
+              </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="water_target">Target Air (ml)</Label>
-                    <Input
-                      id="water_target"
-                      type="number"
-                      value={targetForm.data.water_target}
-                      onChange={(e) => targetForm.setData('water_target', e.target.value)}
-                      required
-                    />
-                  </div>
+              <div className="space-y-2">
+                <Label htmlFor="water_target">Target Air (ml)</Label>
+                <Input
+                  id="water_target"
+                  type="number"
+                  value={targetForm.data.water_target}
+                  onChange={(e) => targetForm.setData('water_target', e.target.value)}
+                  required
+                />
+              </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="goal_type">Tujuan</Label>
-                    <Select
-                      value={targetForm.data.goal_type}
-                      onValueChange={(value) => targetForm.setData('goal_type', value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="lose_weight">Turunkan Berat Badan</SelectItem>
-                        <SelectItem value="maintain_weight">Pertahankan Berat Badan</SelectItem>
-                        <SelectItem value="gain_weight">Naikkan Berat Badan</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+              <div className="space-y-2">
+                <Label htmlFor="goal_type">Tujuan</Label>
+                <Select
+                  value={targetForm.data.goal_type}
+                  onValueChange={(value) => targetForm.setData('goal_type', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="lose_weight">Turunkan Berat Badan</SelectItem>
+                    <SelectItem value="maintain_weight">Pertahankan Berat Badan</SelectItem>
+                    <SelectItem value="gain_weight">Naikkan Berat Badan</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-                  <div className="flex gap-2">
-                    <Button type="submit" disabled={targetForm.processing}>
-                      {targetForm.processing ? 'Menyimpan...' : 'Simpan'}
-                    </Button>
-                    <Button 
-                      type="button" 
-                      variant="outline"
-                      onClick={() => setShowTargetForm(false)}
-                    >
-                      Batal
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+              <div className="flex gap-2">
+                <Button type="submit" disabled={targetForm.processing}>
+                  {targetForm.processing ? 'Menyimpan...' : 'Simpan'}
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline"
+                  onClick={() => setShowTargetForm(false)}
+                >
+                  Batal
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </Layout>
   );

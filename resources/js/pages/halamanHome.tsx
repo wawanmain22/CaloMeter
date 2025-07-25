@@ -108,7 +108,7 @@ export default function HalamanHome() {
         </section>
 
         {/* Stats Section */}
-        <section className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
           {stats.map((stat, index) => (
             <div key={index} className="text-center space-y-2">
               <div className="flex justify-center text-primary">
@@ -123,12 +123,12 @@ export default function HalamanHome() {
         {/* Features Section */}
         <section className="space-y-12">
           <div className="text-center space-y-4">
-            <h2 className="text-3xl md:text-4xl font-bold">Fitur Unggulan</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold">Fitur Unggulan</h2>
+            <p className="text-sm md:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
               Dapatkan akses ke berbagai tools kesehatan yang dapat membantu mencapai target berat badan ideal
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {features.map((feature, index) => (
               <Card key={index} className="hover:shadow-lg transition-shadow cursor-pointer group">
                 <CardHeader className="text-center">
