@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bmi', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained('users');
             $table->integer('height');
             $table->float('weight');
             $table->enum('gender', ['male', 'female']);

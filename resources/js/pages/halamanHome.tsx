@@ -1,14 +1,17 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import VerifikasiLayout from '@/layouts/verifikasi-layout';
 import NonVerifikasiLayout from '@/layouts/non-verifikasi-layout';
 import { Link, usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
-import { Calculator, Target, TrendingUp, Users, CheckCircle, Star } from 'lucide-react';
+import { Calculator, Target, TrendingUp, Users, CheckCircle, Star, BarChart3, History } from 'lucide-react';
 import { showSuccess, showError } from '@/lib/sweetalert';
+import { SharedData } from '@/types';
 
 export default function HalamanHome() {
-  const { flash } = usePage<{ flash: { success?: string; error?: string } }>().props;
+  const { flash, auth } = usePage<{ flash: { success?: string; error?: string }; auth: any }>().props;
+  const user = auth?.user;
 
   // Handle flash messages
   useEffect(() => {
@@ -57,14 +60,16 @@ export default function HalamanHome() {
     "Tips kesehatan dari ahli gizi"
   ];
 
+  const Layout = user ? VerifikasiLayout : NonVerifikasiLayout;
+
   return (
-    <NonVerifikasiLayout>
+    <Layout>
       <div className="space-y-16">
         {/* Hero Section */}
         <section className="text-center space-y-8 py-12">
           <div className="space-y-4">
             <Badge variant="secondary" className="px-3 py-1 text-sm">
-              =� Platform Kesehatan Terdepan
+              {user ? `👋 Selamat datang, ${String(user.username)}!` : '🚀 Platform Kesehatan Terdepan'}
             </Badge>
             <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               CaloMeter
@@ -74,12 +79,31 @@ export default function HalamanHome() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link href="/register">Mulai Sekarang</Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/bmi">Coba BMI Calculator</Link>
-            </Button>
+            {user ? (
+              <>
+                <Button size="lg" asChild>
+                  <Link href="/bmi">
+                    <Calculator className="mr-2 h-5 w-5" />
+                    Hitung BMI Sekarang
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <Link href="/bmi">
+                    <History className="mr-2 h-5 w-5" />
+                    Lihat Riwayat BMI
+                  </Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button size="lg" asChild>
+                  <Link href="/register">Mulai Sekarang</Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <Link href="/bmi">Coba BMI Calculator</Link>
+                </Button>
+              </>
+            )}
           </div>
         </section>
 
@@ -166,23 +190,55 @@ export default function HalamanHome() {
         {/* CTA Section */}
         <section className="text-center space-y-8 py-12">
           <div className="space-y-4">
-            <h2 className="text-3xl md:text-4xl font-bold">
-              Siap Memulai Perjalanan Kesehatan Anda?
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Bergabunglah dengan ribuan pengguna yang sudah merasakan manfaat CaloMeter dalam mencapai target kesehatan mereka.
-            </p>
+            {user ? (
+              <>
+                <h2 className="text-3xl md:text-4xl font-bold">
+                  Selamat datang kembali, {String(user.username)}!
+                </h2>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  Lanjutkan perjalanan kesehatan Anda dengan menggunakan fitur-fitur CaloMeter untuk mencapai target yang optimal.
+                </p>
+              </>
+            ) : (
+              <>
+                <h2 className="text-3xl md:text-4xl font-bold">
+                  Siap Memulai Perjalanan Kesehatan Anda?
+                </h2>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  Bergabunglah dengan ribuan pengguna yang sudah merasakan manfaat CaloMeter dalam mencapai target kesehatan mereka.
+                </p>
+              </>
+            )}
           </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link href="/register">Daftar Gratis</Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/login">Sudah Punya Akun?</Link>
-            </Button>
+            {user ? (
+              <>
+                <Button size="lg" asChild>
+                  <Link href="/calorie-intake">
+                    <Target className="mr-2 h-5 w-5" />
+                    Hitung Kalori Harian
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <Link href="/daily-tracker">
+                    <BarChart3 className="mr-2 h-5 w-5" />
+                    Daily Tracker
+                  </Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button size="lg" asChild>
+                  <Link href="/register">Daftar Gratis</Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <Link href="/login">Sudah Punya Akun?</Link>
+                </Button>
+              </>
+            )}
           </div>
         </section>
       </div>
-    </NonVerifikasiLayout>
+    </Layout>
   );
 }

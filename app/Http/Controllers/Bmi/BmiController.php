@@ -108,6 +108,51 @@ class BmiController extends Controller
         }
     }
 
+    // Fungsi untuk insert data bmi untuk guest (tanpa login)
+    public function calculateGuestBmi(Request $request)
+    {
+        $validatedData = $request->validate([
+            'height' => 'required|numeric|min:50|max:300', // dalam cm
+            'weight' => 'required|numeric|min:10|max:500', // dalam kg
+            'gender' => 'required|string|in:male,female',
+            'age' => 'required|integer|min:1|max:150',
+        ]);
+
+        // Hitung BMI
+        $bmiValue = $this->calculateBmi(
+            $validatedData['height'],
+            $validatedData['weight'],
+            $validatedData['gender'],
+            $validatedData['age']
+        );
+
+        // Tentukan kategori BMI
+        $category = $this->getBmiCategory($bmiValue);
+
+        // Dapatkan saran berdasarkan BMI
+        $recommendation = $this->getBmiRecommendation($bmiValue, $validatedData['gender'], $validatedData['age']);
+
+        // Simpan ke database dengan user_id null untuk guest
+        $bmi = BMI::create([
+            'user_id' => null, // Guest user
+            'height' => $validatedData['height'],
+            'weight' => $validatedData['weight'],
+            'gender' => $validatedData['gender'],
+            'age' => $validatedData['age'],
+            'bmi_value' => round($bmiValue, 2),
+            'category' => $category,
+            'recommendation' => $recommendation,
+        ]);
+
+        return Redirect::route('bmi.page')
+            ->with('success', 'BMI berhasil dihitung dan disimpan!')
+            ->with('bmiResult', [
+                'bmi' => round($bmiValue, 2),
+                'category' => $category,
+                'recommendation' => $recommendation
+            ]);
+    }
+
     // Fungsi untuk menampilkan halaman BMI
     public function bmiPage()
     {
@@ -120,14 +165,16 @@ class BmiController extends Controller
 
             return Inertia::render('bmi/halamanBmi', [
                 'bmiHistory' => $bmiHistory,
-                'user' => Auth::user()->only(['username', 'gender', 'birth_date'])
+                'user' => Auth::user()->only(['username', 'gender', 'birth_date']),
+                'bmiResult' => session('bmiResult')
             ]);
         }
 
         // Untuk user yang tidak login
         return Inertia::render('bmi/halamanBmi', [
             'bmiHistory' => [],
-            'user' => null
+            'user' => null,
+            'bmiResult' => session('bmiResult')
         ]);
     }
 

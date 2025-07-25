@@ -34,8 +34,8 @@ class VerfikasiController extends Controller
         // Login user otomatis setelah registrasi
         Auth::login($user);
 
-        // Redirect ke dashboard dengan success message
-        return Redirect::route('dashboard')
+        // Redirect ke home dengan success message
+        return Redirect::route('home')
             ->with('success', 'Selamat datang di CaloMeter! Akun Anda berhasil dibuat dan Anda sudah login.');
     }
 
@@ -56,8 +56,8 @@ class VerfikasiController extends Controller
             // Regenerate session untuk security
             $request->session()->regenerate();
 
-            // Redirect ke intended page atau dashboard
-            return Redirect::intended('dashboard')
+            // Redirect ke intended page atau home
+            return Redirect::intended('/')
                 ->with('success', 'Selamat datang kembali, ' . Auth::user()->username . '!');
         }
 

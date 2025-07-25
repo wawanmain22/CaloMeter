@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Verfikasi\VerfikasiController;
 use App\Http\Controllers\Bmi\BmiController;
+use App\Http\Controllers\User\UserController;
 
 // Home Route
 Route::get('/', [VerfikasiController::class, 'homePage'])->name('home');
@@ -17,6 +18,7 @@ Route::post('/logout', [VerfikasiController::class, 'logout'])->name('logout');
 
 // BMI Routes (accessible without login)
 Route::get('/bmi', [BmiController::class, 'bmiPage'])->name('bmi.page');
+Route::post('/bmi/calculate-guest', [BmiController::class, 'calculateGuestBmi'])->name('bmi.calculate.guest');
 
 // BMI Routes for authenticated users
 Route::middleware(['auth'])->group(function () {
@@ -25,12 +27,14 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/bmi/delete/{id}', [BmiController::class, 'destroy'])->name('bmi.delete');
 });
 
-// Dashboard for authenticated users
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+// User Profile Routes (authenticated users only)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [UserController::class, 'profilePage'])->name('profile.page');
+    Route::patch('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile/data', [UserController::class, 'getUserData'])->name('profile.data');
 });
+
+// No dashboard needed - authenticated users go to home
 
 // Placeholder routes for future features
 Route::get('/calorie-intake', function () {

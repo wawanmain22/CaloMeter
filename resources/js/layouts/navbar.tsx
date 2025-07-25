@@ -71,14 +71,14 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
                       <div className="flex flex-col space-y-1 leading-none">
                         <p className="font-medium">{String(user.username)}</p>
                         <p className="w-[200px] truncate text-sm text-muted-foreground">
-                          {String(user.email || '')}
+                          {user.gender === 'male' ? 'Laki-laki' : 'Perempuan'}
                         </p>
                       </div>
                     </div>
                     <DropdownMenuItem asChild>
-                      <Link href="/dashboard" className="w-full cursor-pointer">
+                      <Link href="/profile" className="w-full cursor-pointer">
                         <User className="mr-2 h-4 w-4" />
-                        Dashboard
+                        Profile
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>

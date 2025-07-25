@@ -66,59 +66,31 @@ export default function HalamanBmi({ bmiHistory = [], bmiResult }: BMIPageProps)
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
     if (user) {
+      // For authenticated users, use the existing route
       post('/bmi/calculate', {
         onSuccess: () => reset(),
       });
     } else {
-      // For non-authenticated users, calculate BMI client-side
-      const heightInMeters = parseFloat(data.height) / 100;
-      const weight = parseFloat(data.weight);
-      const bmi = weight / (heightInMeters * heightInMeters);
-      const category = getBMICategory(bmi);
-      const recommendation = getBMIRecommendation(bmi);
-      
-      // Show BMI result with SweetAlert
-      showBMIResult(parseFloat(bmi.toFixed(2)), category, recommendation);
-      reset();
+      // For non-authenticated users, send data to backend for database storage
+      post('/bmi/calculate-guest', {
+        onSuccess: () => reset(),
+      });
     }
   };
 
-  const getBMICategory = (bmi: number): string => {
-    if (bmi < 18.5) return 'Underweight';
-    if (bmi < 25) return 'Normal weight';
-    if (bmi < 30) return 'Overweight';
-    return 'Obese';
-  };
-
-  const getBMIRecommendation = (bmi: number): string => {
-    const category = getBMICategory(bmi);
-    
-    switch (category) {
-      case 'Underweight':
-        return 'Disarankan untuk menambah berat badan dengan pola makan sehat dan olahraga yang tepat. Konsultasikan dengan dokter atau ahli gizi.';
-      case 'Normal weight':
-        return 'Berat badan Anda ideal! Pertahankan dengan pola makan seimbang dan olahraga teratur.';
-      case 'Overweight':
-        return 'Disarankan untuk menurunkan berat badan dengan diet sehat dan meningkatkan aktivitas fisik. Konsultasikan dengan ahli gizi.';
-      case 'Obese':
-        return 'Sangat disarankan untuk berkonsultasi dengan dokter untuk program penurunan berat badan yang aman dan efektif.';
-      default:
-        return 'Konsultasikan hasil BMI Anda dengan tenaga kesehatan profesional.';
-    }
-  };
 
   const getBMIColor = (category: string): string => {
     switch (category.toLowerCase()) {
       case 'underweight':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
       case 'normal weight':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
       case 'overweight':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
       case 'obese':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200';
     }
   };
 
@@ -271,21 +243,21 @@ export default function HalamanBmi({ bmiHistory = [], bmiResult }: BMIPageProps)
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="flex justify-between items-center p-3 rounded-lg bg-blue-50">
-                  <span className="font-medium">Underweight</span>
-                  <span className="text-sm text-muted-foreground">&lt; 18.5</span>
+                <div className="flex justify-between items-center p-3 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800">
+                  <span className="font-medium text-blue-900 dark:text-blue-100">Underweight</span>
+                  <span className="text-sm text-blue-700 dark:text-blue-300">&lt; 18.5</span>
                 </div>
-                <div className="flex justify-between items-center p-3 rounded-lg bg-green-50">
-                  <span className="font-medium">Normal weight</span>
-                  <span className="text-sm text-muted-foreground">18.5 - 24.9</span>
+                <div className="flex justify-between items-center p-3 rounded-lg bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800">
+                  <span className="font-medium text-green-900 dark:text-green-100">Normal weight</span>
+                  <span className="text-sm text-green-700 dark:text-green-300">18.5 - 24.9</span>
                 </div>
-                <div className="flex justify-between items-center p-3 rounded-lg bg-yellow-50">
-                  <span className="font-medium">Overweight</span>
-                  <span className="text-sm text-muted-foreground">25.0 - 29.9</span>
+                <div className="flex justify-between items-center p-3 rounded-lg bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800">
+                  <span className="font-medium text-yellow-900 dark:text-yellow-100">Overweight</span>
+                  <span className="text-sm text-yellow-700 dark:text-yellow-300">25.0 - 29.9</span>
                 </div>
-                <div className="flex justify-between items-center p-3 rounded-lg bg-red-50">
-                  <span className="font-medium">Obese</span>
-                  <span className="text-sm text-muted-foreground">&geq; 30.0</span>
+                <div className="flex justify-between items-center p-3 rounded-lg bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800">
+                  <span className="font-medium text-red-900 dark:text-red-100">Obese</span>
+                  <span className="text-sm text-red-700 dark:text-red-300">&geq; 30.0</span>
                 </div>
               </div>
 
